@@ -1,0 +1,7 @@
+README.md
+pyproject.toml
+registry_service.egg-info/PKG-INFO
+registry_service.egg-info/SOURCES.txt
+registry_service.egg-info/dependency_links.txt
+registry_service.egg-info/requires.txt
+registry_service.egg-info/top_level.txt

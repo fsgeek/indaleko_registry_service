@@ -1,9 +1,10 @@
 # models.py
 
-from pydantic import BaseModel, Field
-from uuid import UUID
-from typing import Optional, Literal, Dict
 from datetime import datetime
+from typing import Dict, Literal, Optional
+from uuid import UUID
+
+from pydantic import BaseModel
 
 # -----------------------------
 # API Models

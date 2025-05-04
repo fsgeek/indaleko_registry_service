@@ -6,9 +6,10 @@ Designed for a separate intern to use as their starting point.
 Covers: registration, resolution, property updates, and error handling.
 """
 
-import pytest
-import httpx
 from uuid import UUID
+
+import httpx
+import pytest
 
 BASE_URL = "http://localhost:8000"
 
@@ -30,7 +31,13 @@ def test_register_and_resolve(client):
     assert isinstance(uuid, UUID)
 
     # Resolve
-    r2 = client.get("/resolve", params={"category": "semantic_label", "name": "test_label"})
+    r2 = client.get(
+        "/resolve",
+        params={
+            "category": "semantic_label",
+            "name": "test_label"
+        }
+    )
     assert r2.status_code == 200
     assert r2.json()["uuid"] == str(uuid)
 
