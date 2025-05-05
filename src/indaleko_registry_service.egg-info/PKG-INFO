@@ -1,0 +1,61 @@
+Metadata-Version: 2.4
+Name: indaleko-registry-service
+Version: 0.1.0
+Summary: Semantic registration service for UUID and metadata mapping.
+Author-email: Tony Mason <fsgeek@cs.ubc.ca>
+Requires-Python: >=3.12
+Description-Content-Type: text/markdown
+Requires-Dist: fastapi
+Requires-Dist: uvicorn[standard]
+Requires-Dist: pydantic
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: ruff; extra == "dev"
+Requires-Dist: pytest-cov; extra == "dev"
+Requires-Dist: httpx; extra == "dev"
+
+# Registry Service
+
+Standalone semantic registration service for UUID and metadata mapping.
+
+## Installation
+
+Install via pip:
+```bash
+pip install .
+```
+
+## Usage
+
+Run the service with the CLI:
+```bash
+registry-service
+```
+
+Or directly with Uvicorn:
+## Reverse Lookup
+
+To resolve a UUID back to its semantic identifier, call the `/lookup` endpoint with the `uuid` query parameter:
+
+```bash
+curl -X GET "http://localhost:8000/lookup?uuid=<UUID>"
+```
+
+Response example:
+```json
+{
+  "uuid": "123e4567-e89b-12d3-a456-426614174000",
+  "category": "semantic_label",
+  "name": "test_label"
+}
+```
+```bash
+uvicorn registry_service.service:app --host 0.0.0.0 --port 8000
+```
+
+## Running Tests
+
+Execute the full test suite:
+```bash
+pytest
+```

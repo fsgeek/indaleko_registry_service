@@ -1,32 +1,31 @@
 # pyproject.toml for registry_service
 
 [project]
-name = "registry-service"
+name = "indaleko-registry-service"
 version = "0.1.0"
-description = "Standalone semantic registration service for UUID and metadata mapping. (Consumer)"
+description = "Semantic registration service for UUID and metadata mapping."
 readme = "README.md"
 authors = [
-  { name = "AI Intern", email = "intern@indaleko.ai" }
+  { name = "Tony Mason", email = "fsgeek@cs.ubc.ca" }
 ]
 requires-python = ">=3.12"
 dependencies = [
   "fastapi",
   "uvicorn[standard]",
   "pydantic",
-  "httpx",
 ]
-scripts = {"registry-service" = "registry_service.cli:main"}
-build-system = {requires = ["setuptools>=65.0.0", "wheel"], build-backend = "setuptools.build_meta"}
 
 [project.optional-dependencies]
 dev = [
   "pytest",
   "ruff",
-  "pytest-cov"
+  "pytest-cov",
+  "httpx",
 ]
 
-[tool.setuptools.packages.find]
-where = ["."]
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = ["indaleko_registry_service"]
 
 [tool.pytest.ini_options]
 addopts = "--cov=registry_service --cov-report=term-missing"
