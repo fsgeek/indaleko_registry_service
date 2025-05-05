@@ -1,0 +1,52 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        name: Trim trailing whitespace
+        description: This hook removes trailing whitespace from files
+        args: [--markdown-linebreak-ext=md]
+      - id: end-of-file-fixer
+        name: Fix end of files
+        description: This hook ensures files end with a newline
+      - id: check-yaml
+        name: Check YAML syntax
+        description: This hook checks YAML files for valid syntax
+      - id: check-toml
+        name: Check TOML syntax
+        description: This hook checks TOML files for valid syntax
+      - id: check-added-large-files
+        name: Check for large files
+        description: Prevents adding large files to git
+        args: [--maxkb=500]
+
+  - repo: https://github.com/psf/black
+    rev: 24.4.0
+    hooks:
+      - id: black
+        name: Format with Black
+        description: This hook formats Python code according to Black style
+        language_version: python3
+        additional_dependencies: ['click>=8.0.0']
+        # Exclude large generated or legacy directories to limit scope
+        # Exclude all activity except location and ambient music providers
+        # Exclude all activity except key providers: location, ambient/music, and NTFS warm tier recorder
+        # Do not exclude new prompt management code in query/utils/prompt_management
+        exclude: '^(?:activity/(?!collectors/(?:location|ambient/music)/|recorders/(?:location|ambient/music|storage/ntfs/tiered/warm)/)|old|semantic|apollo|archivist|backup|db|doc|figures|fileaudit|firecircle|perf|platforms|query/(?!utils/prompt_management/)|scratch|scripts|tools|web|utils)/'
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.5.0
+    hooks:
+      - id: ruff
+        name: Run Ruff linter
+        description: This hook runs the Ruff linter to check code quality
+        # Ignore ERA001 (commented-out code) in template files via CLI args
+        args:
+          - --fix
+          - --exit-non-zero-on-fix
+          - --ignore=ERA001
+        # Exclude large generated or legacy directories to limit scope
+        # Exclude all activity except location and ambient music providers
+        # Exclude all activity except key providers: location, ambient/music, and NTFS warm tier recorder
+        # Do not exclude new prompt management code in query/utils/prompt_management
+        exclude: '^(?:activity/(?!collectors/(?:location|ambient/music)/|recorders/(?:location|ambient/music|storage/ntfs/tiered/warm)/)|old|semantic|apollo|archivist|backup|db|doc|figures|fileaudit|firecircle|perf|platforms|query/(?!utils/prompt_management/)|scratch|scripts|tools|web|utils)/'
