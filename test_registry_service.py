@@ -11,12 +11,22 @@ from uuid import UUID
 import httpx
 import pytest
 
-BASE_URL = "http://localhost:8000"
+BASE_URL = "http://testserver"
 
 @pytest.fixture(scope="session")
-def client():
-    with httpx.Client(base_url=BASE_URL) as c:
-        yield c
+def client(tmp_path_factory):
+    # Override the SQLite DB path for isolation
+    import registry_service.service as service
+    from fastapi.testclient import TestClient
+
+    # Prepare temporary SQLite file
+    db_file = tmp_path_factory.mktemp("data") / "test_registry.sqlite"
+    service.db_path = str(db_file)
+
+    # Create TestClient for in-process testing
+    from registry_service.service import app
+    with TestClient(app) as client:
+        yield client
 
 def test_register_and_resolve(client):
     data = {
@@ -77,3 +87,25 @@ def test_property_roundtrip(client):
     assert r.status_code == 200
     result = r.json()
     assert result["properties"]["ngram"] == 2
+
+def test_lookup_uuid_to_name(client):
+    # Register a new entry to test reverse lookup
+    payload = {"category": "semantic_label", "name": "lookup_test", "description": "desc"}
+    resp = client.post("/register", json=payload)
+    assert resp.status_code == 200
+    data = resp.json()
+    uuid_str = data["uuid"]
+    # Lookup by UUID
+    lookup_resp = client.get("/lookup", params={"uuid": uuid_str})
+    assert lookup_resp.status_code == 200
+    lookup_data = lookup_resp.json()
+    assert lookup_data["uuid"] == uuid_str
+    assert lookup_data["category"] == payload["category"]
+    assert lookup_data["name"] == payload["name"]
+    
+def test_lookup_unknown_uuid(client):
+    # Lookup with a UUID that does not exist should return 404
+    import uuid
+    random_uuid = str(uuid.uuid4())
+    r = client.get("/lookup", params={"uuid": random_uuid})
+    assert r.status_code == 404

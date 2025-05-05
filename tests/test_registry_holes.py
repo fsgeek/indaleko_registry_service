@@ -9,12 +9,19 @@ import time
 import re
 from datetime import datetime
 
-BASE_URL = "http://localhost:8000"
+BASE_URL = "http://testserver"  # Unused when using TestClient
 
 @pytest.fixture(scope="session")
-def client():
-    with httpx.Client(base_url=BASE_URL) as c:
-        yield c
+def client(tmp_path_factory):
+    # Override the SQLite DB path for isolation
+    import registry_service.service as service
+    db_file = tmp_path_factory.mktemp("data") / "test_registry.sqlite"
+    service.db_path = str(db_file)
+    # Use FastAPI TestClient for in-process testing
+    from fastapi.testclient import TestClient
+    from registry_service.service import app
+    with TestClient(app) as client:
+        yield client
 
 @pytest.fixture
 def rand_name():

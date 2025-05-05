@@ -15,6 +15,8 @@ dependencies = [
   "pydantic",
   "httpx",
 ]
+scripts = {"registry-service" = "registry_service.cli:main"}
+build-system = {requires = ["setuptools>=65.0.0", "wheel"], build-backend = "setuptools.build_meta"}
 
 [project.optional-dependencies]
 dev = [
